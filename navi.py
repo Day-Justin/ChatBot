@@ -2,6 +2,7 @@
 
 import discord
 import os
+import random
 import logging
 from dotenv import load_dotenv
 
@@ -23,16 +24,33 @@ async def on_ready():
 		print(f'Hey! Listen')
 @client.event	
 async def on_message(message):
+
+		#logs the messages and channels
+		userName = str(message.author).split('#')[0]
+		userMessage = str(message.content)
+		channel = str(message.channel.name)
+		
 		if message.author == client.user:
 			return
-		if message.content.startswith('$hello'):
-			await message.channel.send('Hey! Listen') 
 
+		if message.channel.name == 'bot':
+			if userMessage.lower() == 'hello':
+				await message.channel.send(f'Hey {userName}! Listen')
+				return
+			
+			if userMessage.lower() == 'bye':
+				await message.channel.send(f'Hey {userName}! Bye')
+				return
 
+			if userMessage.lower() == 'random':
+				response = f'Hey! Listen: {random.randrange(10000000)}'
+				await message.channel.send(response)
+				return 
 
-
-
-
+		if userMessage.lower() == 'anywhere':
+			await message.channel.send('Thought you could run from Hey! Listen huh')
+			return
+			
 TOKEN = os.getenv("NAVI_TOKEN")
 client.run(TOKEN)
 
